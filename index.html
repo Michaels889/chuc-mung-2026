@@ -2,138 +2,105 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chúc Mừng Năm Mới 2026</title>
     <style>
-        body { margin: 0; background: #000; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        #ui { position: absolute; width: 100%; text-align: center; top: 30%; color: white; pointer-events: none; z-index: 10; }
-        .title { font-size: 2.5em; color: #ff0000; text-shadow: 0 0 20px #ffcc00; font-weight: bold; margin-bottom: 10px; }
-        .wish { font-size: 1.2em; color: #ffcc00; padding: 0 20px; line-height: 1.5; }
-        .ascii { font-family: monospace; white-space: pre; font-size: 8px; color: #00ff00; margin-top: 20px; opacity: 0.8; }
-        .note { position: absolute; bottom: 30px; width: 100%; text-align: center; color: #555; font-size: 0.9em; }
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; touch-action: manipulation; }
+        #container { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; pointer-events: none; text-align: center; }
+        
+        .header { 
+            font-size: 2.8rem; font-weight: 900; color: #ff0000; 
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ffcc00, 0 0 30px #ffcc00;
+            animation: pulse 1.5s infinite alternate; margin-bottom: 5px;
+        }
+        
+        .wish-text { font-size: 1.1rem; color: #ffcc00; font-weight: bold; text-shadow: 1px 1px 5px #000; line-height: 1.6; padding: 0 15px; }
+        
+        .ascii-art { 
+            font-family: monospace; white-space: pre; font-size: 9px; 
+            color: #00ff88; margin-top: 15px; opacity: 0.9;
+            text-shadow: 0 0 5px #00ff88; line-height: 1.1;
+        }
+
+        .footer-note { position: absolute; bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.8rem; letter-spacing: 1px; }
+
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        
+        /* Nút bật nhạc */
+        #music-btn {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #fff;
+        }
     </style>
 </head>
 <body>
-    <div id="ui">
-        <div class="title">!HAPPY NEW YEAR 2026!</div>
-        <div class="wish">An Khang Thịnh Vượng - Vạn Sự Như Ý<br>Sức Khỏe Dồi Dào - Phát Tài Phát Lộc</div>
-        <div class="ascii">
-            　｡ *🍇∴｡ 🍇  ｡∴🍇*｡
-            ｡🍇*ﾟﾟ*🍀∵🍀*ﾟﾟ  *🍇.
-            🍇*CHÚC 🎀MỪNG*🍇
-             *🍇｡ﾟ NĂM MỚI   ｡🍇*
-　             ∵🍇｡   🎀  ｡🍇∵ 
-　　              ﾟ*🍇 ｡｡ 🍇*ﾟ
-　　 　                *🍇　　  
-             　｡ *🍇∴｡ 🍇  ｡∴🍇*｡
-             ｡🍇 *ﾟﾟ *🍀∵🍀*ﾟﾟ *🍇.
-               🍇* Vạn 🎀 Sự *🍇
-                *🍇｡ﾟ Như Ý  ｡🍇*
-　                 🍇｡  🎀  ｡🍇
-                　　 ﾟ*🍇 ｡｡ 🍇*ﾟ
-　　                　ﾟ. *🍇* ﾟ
-                　｡ *🍇∴｡ 🍇  ｡∴🍇*｡
-                ｡🍇.  *ﾟﾟ*🍀∵🍀*ﾟﾟ  *🍇.
-                  🍇* Phát 🎀 Lộc  *🍇
-                   *🍇｡ﾟPhát Tài  ｡🍇*
-　                   ∵🍇｡  🎀   ｡🍇∵ 
-　　                   ﾟ*🍇 ｡｡ 🍇*ﾟ
-　　                    　ﾟ *🍇* !
+
+    <div id="music-btn" onclick="toggleMusic()">🎵</div>
+    
+    <div id="container">
+        <div class="header">2026</div>
+        <div class="header" style="font-size: 1.5rem; margin-bottom: 15px;">HAPPY NEW YEAR</div>
+        <div class="wish-text">
+            🧧 AN KHANG THỊNH VƯỢNG 🧧<br>
+            ✨ VẠN SỰ NHƯ Ý - PHÁT TÀI PHÁT LỘC ✨
         </div>
+        <div class="ascii-art">
+　｡ *🍇∴｡ 🍇  ｡∴🍇*｡
+｡🍇*ﾟﾟ*🍀∵🍀*ﾟﾟ  *🍇.
+🍇*CHÚC 🎀MỪNG*🍇
+ *🍇｡ﾟ NĂM MỚI   ｡🍇*
+　 ∵🍇｡     🎀     ｡🍇∵ 
+　　 ﾟ*🍇 ｡｡ 🍇*ﾟ
+        </div>
+        <div class="footer-note">CHẠM ĐỂ BẮN PHÁO HOA 🎇</div>
     </div>
-    <div class="note">Chạm vào màn hình để bắn pháo hoa 🎆</div>
+
     <canvas id="canvas"></canvas>
 
+    <audio id="bgMusic" loop>
+        <source src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-New-Year.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const music = document.getElementById('bgMusic');
+        let musicPlaying = false;
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+        function toggleMusic() {
+            if (musicPlaying) { music.pause(); } else { music.play(); }
+            musicPlaying = !musicPlaying;
+        }
+
+        // Hiệu ứng pháo hoa Confetti chuyên nghiệp
+        function fire() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff0000', '#ffcc00', '#ffffff', '#00ff00', '#0000ff']
+            });
+        }
+
+        // Bắn liên tục lúc đầu
+        setTimeout(fire, 500);
+        setTimeout(fire, 1000);
+
+        window.addEventListener('click', (e) => {
+            fire();
+            if(!musicPlaying) { music.play(); musicPlaying = true; } // Tự động phát nhạc khi click lần đầu
+        });
 
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
-
-        class Firework {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height;
-                this.sx = Math.random() * 3 - 1.5;
-                this.sy = Math.random() * -3 - 3;
-                this.size = Math.random() * 2 + 1;
-                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                this.exploded = false;
-            }
-            update() {
-                this.x += this.sx;
-                this.y += this.sy;
-                this.sy += 0.05;
-                if (this.sy >= 0 && !this.exploded) {
-                    this.exploded = true;
-                    this.explode();
-                }
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            explode() {
-                for (let i = 0; i < 50; i++) {
-                    particles.push(new Particle(this.x, this.y, this.color));
-                }
-            }
-        }
-
-        class Particle {
-            constructor(x, y, color) {
-                this.x = x; this.y = y; this.color = color;
-                this.sx = Math.random() * 6 - 3;
-                this.sy = Math.random() * 6 - 3;
-                this.alpha = 1;
-            }
-            update() {
-                this.x += this.sx; this.y += this.sy;
-                this.alpha -= 0.02;
-            }
-            draw() {
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        let fireworks = [];
-        let particles = [];
-
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            if (Math.random() < 0.05) fireworks.push(new Firework());
-            fireworks.forEach((f, i) => {
-                f.update(); f.draw();
-                if (f.exploded) fireworks.splice(i, 1);
-            });
-            particles.forEach((p, i) => {
-                p.update(); p.draw();
-                if (p.alpha <= 0) particles.splice(i, 1);
-            });
-            requestAnimationFrame(animate);
-        }
-
-        canvas.addEventListener('mousedown', (e) => {
-            for(let i=0; i<3; i++) fireworks.push(new Firework());
-        });
-        
-        canvas.addEventListener('touchstart', (e) => {
-            for(let i=0; i<3; i++) fireworks.push(new Firework());
-        });
-
-        animate();
     </script>
 </body>
 </html>
