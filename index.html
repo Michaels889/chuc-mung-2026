@@ -5,108 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chúc Mừng Năm Mới 2026</title>
     <style>
-        body { margin: 0; background: #000; overflow: hidden; font-family: 'Arial', sans-serif; touch-action: none; }
-        canvas { display: block; }
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Arial', sans-serif; color: white; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
         
-        #overlay {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; color: #ffcc00; pointer-events: none; width: 100%; z-index: 10;
+        #content {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; text-align: center;
+            background: rgba(0,0,0,0.3);
         }
 
-        .title { 
-            font-size: 3rem; font-weight: 900; color: #ff3333; 
-            text-shadow: 0 0 20px #ff0000, 0 0 40px #ffcc00;
-            margin-bottom: 10px; animation: glow 1.5s infinite alternate;
+        .year { font-size: 5rem; font-weight: 900; color: #ff3333; text-shadow: 0 0 20px #ff0000, 0 0 40px #ffcc00; margin: 0; }
+        .hny { font-size: 1.8rem; color: #ffcc00; font-weight: bold; letter-spacing: 2px; margin-bottom: 20px; }
+        
+        .wish-box { background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 15px; border: 1px solid #ffcc00; margin: 10px; }
+        .wish-text { color: #fff; font-size: 1.1rem; line-height: 1.8; font-weight: bold; }
+        .heart-icon { color: #ff3333; }
+
+        .ascii-heart {
+            font-family: monospace; white-space: pre; font-size: 10px;
+            color: #00ff88; line-height: 1.2; margin-top: 20px;
+            text-shadow: 0 0 10px #00ff88;
         }
 
-        .wish { font-size: 1.2rem; line-height: 1.6; text-shadow: 2px 2px 4px #000; font-weight: bold; }
-        
-        @keyframes glow {
-            from { text-shadow: 0 0 20px #ff0000, 0 0 30px #ffcc00; }
-            to { text-shadow: 0 0 30px #ff0000, 0 0 50px #ffcc00, 0 0 70px #fff; }
-        }
-
-        #hint { position: absolute; bottom: 30px; width: 100%; text-align: center; color: #888; font-size: 0.9rem; }
-        
-        #btn-music {
+        #music-control {
             position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: rgba(255, 255, 255, 0.2); border: 1px solid #fff;
-            color: #fff; border-radius: 50%; width: 45px; height: 45px; cursor: pointer;
+            width: 50px; height: 50px; background: rgba(255,255,255,0.2);
+            border: 2px solid #ffcc00; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer;
         }
+
+        .tap-hint { position: fixed; bottom: 30px; width: 100%; color: #888; font-size: 0.9rem; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body>
+<body onclick="initEffects()">
 
-    <button id="btn-music">🎵</button>
-    <div id="overlay">
-        <div class="title">2026</div>
-        <div class="wish">
-            🎊 CHÚC MỪNG NĂM MỚI 🎊<br>
-            🍎 AN KHANG THỊNH VƯỢNG 🍎<br>
-            💰 PHÁT TÀI PHÁT LỘC 💰
+    <div id="music-control">🎵</div>
+
+    <div id="content">
+        <h1 class="year">2026</h1>
+        <div class="hny">HAPPY NEW YEAR</div>
+        
+        <div class="wish-box">
+            <div class="wish-text">
+                <span class="heart-icon">❤️</span> AN KHANG THỊNH VƯỢNG <span class="heart-icon">❤️</span><br>
+                ✨ VẠN SỰ NHƯ Ý - PHÁT TÀI PHÁT LỘC ✨<br>
+                <span class="heart-icon">❤️</span> CHÚC MỪNG NĂM MỚI <span class="heart-icon">❤️</span>
+            </div>
         </div>
-    </div>
-    <div id="hint">Chạm màn hình để bắn pháo hoa & bật nhạc 🎆</div>
 
-    <audio id="audio" loop>
+        <div class="ascii-heart">
+    ｡ *🍇∴｡ 🍇  ｡∴🍇*｡
+  ｡🍇*ﾟﾟ*🍀∵🍀*ﾟﾟ * 🍇.
+  🍇*CHÚC 🎀 MỪNG*🍇
+   *🍇｡ﾟ NĂM MỚI ｡🍇*
+     ∵🍇｡  🎀  ｡🍇∵
+       ﾟ*🍇 ｡｡ 🍇*ﾟ
+          ﾟ*🍇*
+        </div>
+
+        <div class="tap-hint">CHẠM ĐỂ BẮN PHÁO HOA & NGHE NHẠC 🎇</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <audio id="bg-music" loop>
         <source src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-New-Year.mp3" type="audio/mpeg">
     </audio>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
-        const audio = document.getElementById('audio');
-        const btn = document.getElementById('btn-music');
-        let playing = false;
+        let isStarted = false;
+        const audio = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-control');
 
-        // Hàm bật/tắt nhạc
-        function toggleMusic() {
-            if (!playing) { audio.play(); btn.innerText = '⏸'; } 
-            else { audio.pause(); btn.innerText = '🎵'; }
-            playing = !playing;
-        }
-        btn.onclick = toggleMusic;
-
-        // Hiệu ứng trái tim và pháo hoa khi click
-        window.addEventListener('click', (e) => {
-            if (!playing) toggleMusic();
-
-            // 1. Pháo hoa tỏa ra
+        function initEffects() {
+            if (!isStarted) {
+                audio.play();
+                isStarted = true;
+                musicBtn.innerText = '⏸';
+                // Bắn pháo hoa chào mừng rực rỡ
+                launchFireworks();
+            }
+            // Mỗi lần click đều bắn pháo hoa tại điểm chạm
             confetti({
-                particleCount: 150,
+                particleCount: 100,
                 spread: 70,
-                origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
-                colors: ['#ff0000', '#ffd700', '#ffffff', '#ff69b4']
+                origin: { y: 0.6 }
             });
+        }
 
-            // 2. Pháo hoa hình trái tim
-            const scalar = 2;
-            const heart = confetti.shapeFromPath({ path: 'M167 430c-75 0-107-77-107-125 0-124 103-151 107-155 4-4 107 27 107 155 0 48-32 125-107 125z' });
-            
-            confetti({
-                shapes: [heart],
-                particleCount: 20,
-                scalar: 3,
-                origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
-            });
+        function launchFireworks() {
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (audio.paused) {
+                audio.play();
+                musicBtn.innerText = '⏸';
+            } else {
+                audio.pause();
+                musicBtn.innerText = '🎵';
+            }
         });
-
-        // Tự động bắn pháo hoa chào mừng
-        setInterval(() => {
-            confetti({
-                particleCount: 50,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ['#ff0000', '#ffd700']
-            });
-            confetti({
-                particleCount: 50,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ['#ff0000', '#ffd700']
-            });
-        }, 3000);
     </script>
 </body>
 </html>
