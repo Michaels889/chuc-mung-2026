@@ -5,102 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chúc Mừng Năm Mới 2026</title>
     <style>
-        body { margin: 0; background: #000; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; touch-action: manipulation; }
-        #container { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; pointer-events: none; text-align: center; }
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Arial', sans-serif; touch-action: none; }
+        canvas { display: block; }
         
-        .header { 
-            font-size: 2.8rem; font-weight: 900; color: #ff0000; 
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ffcc00, 0 0 30px #ffcc00;
-            animation: pulse 1.5s infinite alternate; margin-bottom: 5px;
-        }
-        
-        .wish-text { font-size: 1.1rem; color: #ffcc00; font-weight: bold; text-shadow: 1px 1px 5px #000; line-height: 1.6; padding: 0 15px; }
-        
-        .ascii-art { 
-            font-family: monospace; white-space: pre; font-size: 9px; 
-            color: #00ff88; margin-top: 15px; opacity: 0.9;
-            text-shadow: 0 0 5px #00ff88; line-height: 1.1;
+        #overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; color: #ffcc00; pointer-events: none; width: 100%; z-index: 10;
         }
 
-        .footer-note { position: absolute; bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.8rem; letter-spacing: 1px; }
+        .title { 
+            font-size: 3rem; font-weight: 900; color: #ff3333; 
+            text-shadow: 0 0 20px #ff0000, 0 0 40px #ffcc00;
+            margin-bottom: 10px; animation: glow 1.5s infinite alternate;
+        }
 
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
-        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        .wish { font-size: 1.2rem; line-height: 1.6; text-shadow: 2px 2px 4px #000; font-weight: bold; }
         
-        /* Nút bật nhạc */
-        #music-btn {
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #ff0000, 0 0 30px #ffcc00; }
+            to { text-shadow: 0 0 30px #ff0000, 0 0 50px #ffcc00, 0 0 70px #fff; }
+        }
+
+        #hint { position: absolute; bottom: 30px; width: 100%; text-align: center; color: #888; font-size: 0.9rem; }
+        
+        #btn-music {
             position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #fff;
+            background: rgba(255, 255, 255, 0.2); border: 1px solid #fff;
+            color: #fff; border-radius: 50%; width: 45px; height: 45px; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div id="music-btn" onclick="toggleMusic()">🎵</div>
-    
-    <div id="container">
-        <div class="header">2026</div>
-        <div class="header" style="font-size: 1.5rem; margin-bottom: 15px;">HAPPY NEW YEAR</div>
-        <div class="wish-text">
-            🧧 AN KHANG THỊNH VƯỢNG 🧧<br>
-            ✨ VẠN SỰ NHƯ Ý - PHÁT TÀI PHÁT LỘC ✨
+    <button id="btn-music">🎵</button>
+    <div id="overlay">
+        <div class="title">2026</div>
+        <div class="wish">
+            🎊 CHÚC MỪNG NĂM MỚI 🎊<br>
+            🍎 AN KHANG THỊNH VƯỢNG 🍎<br>
+            💰 PHÁT TÀI PHÁT LỘC 💰
         </div>
-        <div class="ascii-art">
-　｡ *🍇∴｡ 🍇  ｡∴🍇*｡
-｡🍇*ﾟﾟ*🍀∵🍀*ﾟﾟ  *🍇.
-🍇*CHÚC 🎀MỪNG*🍇
- *🍇｡ﾟ NĂM MỚI   ｡🍇*
-　 ∵🍇｡     🎀     ｡🍇∵ 
-　　 ﾟ*🍇 ｡｡ 🍇*ﾟ
-        </div>
-        <div class="footer-note">CHẠM ĐỂ BẮN PHÁO HOA 🎇</div>
     </div>
+    <div id="hint">Chạm màn hình để bắn pháo hoa & bật nhạc 🎆</div>
 
-    <canvas id="canvas"></canvas>
-
-    <audio id="bgMusic" loop>
+    <audio id="audio" loop>
         <source src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-New-Year.mp3" type="audio/mpeg">
     </audio>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const music = document.getElementById('bgMusic');
-        let musicPlaying = false;
+        const audio = document.getElementById('audio');
+        const btn = document.getElementById('btn-music');
+        let playing = false;
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
+        // Hàm bật/tắt nhạc
         function toggleMusic() {
-            if (musicPlaying) { music.pause(); } else { music.play(); }
-            musicPlaying = !musicPlaying;
+            if (!playing) { audio.play(); btn.innerText = '⏸'; } 
+            else { audio.pause(); btn.innerText = '🎵'; }
+            playing = !playing;
         }
+        btn.onclick = toggleMusic;
 
-        // Hiệu ứng pháo hoa Confetti chuyên nghiệp
-        function fire() {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#ff0000', '#ffcc00', '#ffffff', '#00ff00', '#0000ff']
-            });
-        }
-
-        // Bắn liên tục lúc đầu
-        setTimeout(fire, 500);
-        setTimeout(fire, 1000);
-
+        // Hiệu ứng trái tim và pháo hoa khi click
         window.addEventListener('click', (e) => {
-            fire();
-            if(!musicPlaying) { music.play(); musicPlaying = true; } // Tự động phát nhạc khi click lần đầu
+            if (!playing) toggleMusic();
+
+            // 1. Pháo hoa tỏa ra
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
+                colors: ['#ff0000', '#ffd700', '#ffffff', '#ff69b4']
+            });
+
+            // 2. Pháo hoa hình trái tim
+            const scalar = 2;
+            const heart = confetti.shapeFromPath({ path: 'M167 430c-75 0-107-77-107-125 0-124 103-151 107-155 4-4 107 27 107 155 0 48-32 125-107 125z' });
+            
+            confetti({
+                shapes: [heart],
+                particleCount: 20,
+                scalar: 3,
+                origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
+            });
         });
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        // Tự động bắn pháo hoa chào mừng
+        setInterval(() => {
+            confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#ff0000', '#ffd700']
+            });
+            confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#ff0000', '#ffd700']
+            });
+        }, 3000);
     </script>
 </body>
 </html>
